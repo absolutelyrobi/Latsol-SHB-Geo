@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ujian Geografi Kelas 10 — Kurikulum Merdeka</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0d1520;
+    --card: #111b2a;
+    --border: #1e2f45;
+    --accent1: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6e;
+    --accent4: #b06dff;
+    --text: #e8edf5;
+    --muted: #5a7090;
+    --correct: #7fff6e;
+    --wrong: #ff4d6d;
+    --gold: #ffd700;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lexend', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === STAR CANVAS === */
+  #starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* === FLOATING PARTICLES === */
+  .particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatParticle linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatParticle {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  /* === HEADER === */
+  .hero {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 60px 20px 40px;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 600px;
+    background: radial-gradient(ellipse at center, rgba(0,212,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(176,109,255,0.15));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 50px;
+    padding: 6px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent1);
+    margin-bottom: 20px;
+    animation: badgePulse 3s ease-in-out infinite;
+  }
+  @keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(0,212,255,0); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 56px);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent1) 70%, var(--accent4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleSlide 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes titleSlide {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    animation: titleSlide 0.8s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    animation: titleSlide 0.8s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+  }
+  .stat-pill:hover {
+    border-color: var(--accent1);
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+    transform: translateY(-2px);
+  }
+  .stat-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: dotBlink 2s ease-in-out infinite;
+  }
+  @keyframes dotBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* === PROGRESS BAR === */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 10px 20px;
+    background: rgba(8,12,20,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent4));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    width: 0%;
+    box-shadow: 0 0 10px rgba(0,212,255,0.5);
+  }
+  .progress-score {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent1);
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* === SECTION DIVIDERS === */
+  .section-divider {
+    position: relative;
+    z-index: 10;
+    padding: 30px 20px 10px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .section-range {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, currentColor, transparent);
+    opacity: 0.3;
+  }
+
+  /* === QUESTION CARDS === */
+  .questions-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes cardReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--section-color, var(--accent1)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .question-card:hover::before { opacity: 1; }
+
+  .question-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .question-card.answered {
+    border-color: rgba(127,255,110,0.2);
+  }
+  .question-card.answered::before {
+    opacity: 1;
+    background: linear-gradient(90deg, transparent, var(--correct), transparent);
+  }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 18px;
+  }
+  .q-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* === OPTIONS === */
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    text-align: left;
+    width: 100%;
+    color: var(--text);
+    font-family: 'Lexend', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: rgba(0,212,255,0.4);
+    transform: translateX(4px);
+    box-shadow: -4px 0 0 var(--accent1);
+  }
+  .option-btn:hover:not(:disabled)::before { opacity: 1; }
+
+  .option-letter {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s;
+    color: var(--muted);
+  }
+
+  .option-btn:hover:not(:disabled) .option-letter {
+    background: var(--accent1);
+    color: var(--bg);
+  }
+
+  /* States after checking */
+  .option-btn.correct {
+    background: rgba(127,255,110,0.08);
+    border-color: var(--correct);
+    animation: correctPop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .option-btn.correct .option-letter {
+    background: var(--correct);
+    color: #0a1a08;
+  }
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02) translateX(4px); }
+    100% { transform: scale(1) translateX(4px); }
+  }
+
+  .option-btn.wrong {
+    background: rgba(255,77,109,0.08);
+    border-color: var(--wrong);
+    animation: wrongShake 0.4s ease;
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--wrong);
+    color: #fff;
+  }
+  @keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  /* === CHECK BUTTON === */
+  .check-btn {
+    margin-top: 14px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent4));
+    border: none;
+    border-radius: 50px;
+    color: var(--bg);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: none;
+  }
+  .check-btn.visible { display: inline-flex; align-items: center; gap: 8px; }
+  .check-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,212,255,0.4);
+  }
+
+  .feedback-msg {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .feedback-msg.show { display: flex; animation: fadeIn 0.3s ease; }
+  .feedback-msg.correct-msg {
+    background: rgba(127,255,110,0.08);
+    border: 1px solid rgba(127,255,110,0.3);
+    color: var(--correct);
+  }
+  .feedback-msg.wrong-msg {
+    background: rgba(255,77,109,0.08);
+    border: 1px solid rgba(255,77,109,0.3);
+    color: var(--wrong);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === ANSWER KEY TABLE === */
+  .answer-key-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .answer-key-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .answer-key-header {
+    padding: 24px 28px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(176,109,255,0.1));
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .answer-key-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .answer-table-wrap {
+    padding: 24px 28px;
+    overflow-x: auto;
+  }
+
+  .answer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+
+  .answer-table th {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .answer-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(30,47,69,0.5);
+    transition: all 0.2s;
+  }
+
+  .answer-table tr:hover td {
+    background: rgba(0,212,255,0.03);
+  }
+
+  .answer-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.3s;
+  }
+  .answer-badge:hover {
+    transform: scale(1.2);
+  }
+
+  /* === RESULTS PANEL === */
+  .results-panel {
+    max-width: 900px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+    display: none;
+  }
+  .results-panel.show { display: block; animation: fadeIn 0.5s ease; }
+
+  .results-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .results-card::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(ellipse, rgba(0,212,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .results-score {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 72px;
+    background: linear-gradient(135deg, var(--gold), var(--accent1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .results-grade {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .results-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .result-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+  }
+  .result-stat .num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+  .result-stat .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* === SUBMIT ALL BUTTON === */
+  .submit-area {
+    max-width: 900px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+    text-align: center;
+  }
+
+  .submit-all-btn {
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent4));
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-all-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .submit-all-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255,107,53,0.4);
+  }
+  .submit-all-btn:hover::before { opacity: 1; }
+
+  /* === SECTION COLORS === */
+  .sec-1 { --section-color: #00d4ff; }
+  .sec-2 { --section-color: #ff6b35; }
+  .sec-3 { --section-color: #7fff6e; }
+  .sec-4 { --section-color: #ffd700; }
+  .sec-5 { --section-color: #ff4d6d; }
+  .sec-6 { --section-color: #00cfb4; }
+  .sec-7 { --section-color: #b06dff; }
+  .sec-8 { --section-color: #ff9500; }
+
+  .s1 { background: rgba(0,212,255,0.15); color: #00d4ff; }
+  .s2 { background: rgba(255,107,53,0.15); color: #ff6b35; }
+  .s3 { background: rgba(127,255,110,0.15); color: #7fff6e; }
+  .s4 { background: rgba(255,215,0,0.15); color: #ffd700; }
+  .s5 { background: rgba(255,77,109,0.15); color: #ff4d6d; }
+  .s6 { background: rgba(0,207,180,0.15); color: #00cfb4; }
+  .s7 { background: rgba(176,109,255,0.15); color: #b06dff; }
+  .s8 { background: rgba(255,149,0,0.15); color: #ff9500; }
+
+  /* === CONFETTI === */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Ripple */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0,212,255,0.3);
+    animation: rippleOut 0.6s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes rippleOut {
+    from { transform: scale(0); opacity: 1; }
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* === BACK TO TOP === */
+  .back-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 44px; height: 44px;
+    background: var(--accent1);
+    color: var(--bg);
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 200;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .back-top.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .back-top:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,212,255,0.5);
+  }
+
+  /* Tooltip on answered q */
+  .answered-check {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .question-card.answered .answered-check { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .option-btn { font-size: 13px; }
+    .q-text { font-size: 14px; }
+    .hero h1 { font-size: 26px; }
+    .hero-stats { gap: 12px; }
+    .stat-pill { font-size: 11px; padding: 6px 14px; }
+    .answer-table-wrap { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<!-- Progress Bar -->
+<div class="progress-bar-wrap">
+  <span class="progress-label">Progress</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <span class="progress-score" id="progressScore">0/40</span>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">✦ Kurikulum Merdeka ✦</div>
+  <h1>Ujian Geografi<br>Kelas X SMA</h1>
+  <p class="hero-sub">GEOSFER • LITOSFER • PEDOSFER • 40 SOAL PILIHAN GANDA</p>
+  <div class="hero-stats">
+    <div class="stat-pill">
+      <span class="dot" style="background:#00d4ff"></span>
+      40 Soal Pilihan Ganda
+    </div>
+    <div class="stat-pill">
+      <span class="dot" style="background:#7fff6e"></span>
+      8 Kisi-Kisi
+    </div>
+    <div class="stat-pill">
+      <span class="dot" style="background:#b06dff"></span>
+      HOTS &amp; Literasi
+    </div>
+    <div class="stat-pill">
+      <span class="dot" style="background:#ff6b35"></span>
+      Berbasis Kasus Indonesia
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s1">🌍</div>
+    <div>
+      <div class="section-title" style="color:#00d4ff">Kisi 1: Struktur Lapisan Bumi</div>
+      <div class="section-range">Soal 1 – 5</div>
+    </div>
+    <div class="section-line" style="color:#00d4ff"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q1 -->
+<div class="question-card sec-1" style="animation-delay:0.05s" data-q="1" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 01</span>
+    <p class="q-text">Seorang peneliti membandingkan dua jenis kerak bumi. Kerak pertama memiliki ketebalan 20–70 km, tersusun dari batuan granit, dan kaya unsur silisium-aluminium. Kerak kedua jauh lebih tipis (5–10 km), namun memiliki densitas yang lebih tinggi. Pernyataan yang BENAR mengenai kerak kedua tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,1,'A')"><span class="option-letter">A</span>Tersusun dari batuan granit dengan kandungan unsur SiAl yang dominan dan warnanya lebih terang</button>
+    <button class="option-btn" onclick="selectOption(this,1,'B')"><span class="option-letter">B</span>Merupakan bagian dari kerak benua yang mengalami penipisan akibat tarikan gaya tektonik</button>
+    <button class="option-btn" onclick="selectOption(this,1,'C')"><span class="option-letter">C</span>Tersusun dari batuan basalt yang kaya unsur SiMa, lebih tipis namun lebih padat dari kerak benua</button>
+    <button class="option-btn" onclick="selectOption(this,1,'D')"><span class="option-letter">D</span>Terbentuk dari magma yang telah mendingin selama jutaan tahun sehingga menghasilkan batuan granit padat</button>
+    <button class="option-btn" onclick="selectOption(this,1,'E')"><span class="option-letter">E</span>Merupakan lapisan yang lebih ringan dari kerak benua karena tersusun dari mineral-mineral silisium murni</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(1)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-1"></div>
+</div>
+
+<!-- Q2 -->
+<div class="question-card sec-1" style="animation-delay:0.1s" data-q="2" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 02</span>
+    <p class="q-text">Di antara lapisan-lapisan bumi, terdapat lapisan yang berfungsi sebagai "ban berjalan" bagi lempeng tektonik di atasnya. Material lapisan ini bersifat plastis dengan suhu antara 1.300–3.000°C. Lapisan tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,2,'A')"><span class="option-letter">A</span>Astenosfer (mantel bumi), yang menggerakkan lempeng melalui arus konveksi material plastisnya</button>
+    <button class="option-btn" onclick="selectOption(this,2,'B')"><span class="option-letter">B</span>Inti luar bumi yang terdiri dari besi cair dan berputar menghasilkan energi panas ke lapisan di atasnya</button>
+    <button class="option-btn" onclick="selectOption(this,2,'C')"><span class="option-letter">C</span>Litosfer bawah, yaitu bagian terbawah kerak samudra yang perlahan meleleh akibat tekanan dan suhu tinggi</button>
+    <button class="option-btn" onclick="selectOption(this,2,'D')"><span class="option-letter">D</span>Inti dalam bumi yang walaupun bersuhu sangat tinggi tetap berwujud padat karena tekanan ekstrem</button>
+    <button class="option-btn" onclick="selectOption(this,2,'E')"><span class="option-letter">E</span>Kerak bumi bagian bawah yang bersentuhan langsung dengan inti bumi dan berfungsi menghantarkan panas</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(2)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-2"></div>
+</div>
+
+<!-- Q3 -->
+<div class="question-card sec-1" style="animation-delay:0.15s" data-q="3" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 03</span>
+    <p class="q-text">Tanpa adanya suatu lapisan bumi yang bergerak seperti dinamo raksasa, partikel-partikel berenergi tinggi dari matahari akan langsung menghantam permukaan bumi dan merusak kehidupan. Lapisan yang dimaksud beserta fungsi spesifiknya adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,3,'A')"><span class="option-letter">A</span>Mantel bumi, yang menghasilkan gelombang panas konveksi sebagai pelindung alami dari radiasi luar angkasa</button>
+    <button class="option-btn" onclick="selectOption(this,3,'B')"><span class="option-letter">B</span>Inti dalam bumi dari besi padat, yang massa besarnya menciptakan gravitasi kuat untuk menahan atmosfer</button>
+    <button class="option-btn" onclick="selectOption(this,3,'C')"><span class="option-letter">C</span>Litosfer, yang kepadatan batuannya memantulkan partikel-partikel bermuatan dari matahari kembali ke angkasa</button>
+    <button class="option-btn" onclick="selectOption(this,3,'D')"><span class="option-letter">D</span>Astenosfer, yang aliran material plastisnya menyerap energi dari radiasi matahari sebelum mencapai permukaan</button>
+    <button class="option-btn" onclick="selectOption(this,3,'E')"><span class="option-letter">E</span>Inti luar bumi dari besi-nikel cair, yang rotasinya menghasilkan medan magnet bumi sebagai pelindung dari angin matahari</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(3)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-3"></div>
+</div>
+
+<!-- Q4 -->
+<div class="question-card sec-1" style="animation-delay:0.2s" data-q="4" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 04</span>
+    <p class="q-text">Perhatikan dua pernyataan berikut: (I) Inti luar bumi berwujud cair dan tersusun dari besi-nikel. (II) Inti dalam bumi berwujud padat meskipun suhunya mencapai 6.000°C. Berdasarkan dua pernyataan tersebut, manakah simpulan yang PALING TEPAT?</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,4,'A')"><span class="option-letter">A</span>Keduanya salah; inti luar padat dan inti dalam cair karena suhunya jauh lebih tinggi dari inti luar</button>
+    <button class="option-btn" onclick="selectOption(this,4,'B')"><span class="option-letter">B</span>Keduanya benar; inti dalam tetap padat karena tekanan luar biasa dari lapisan di atasnya meskipun suhunya sangat tinggi</button>
+    <button class="option-btn" onclick="selectOption(this,4,'C')"><span class="option-letter">C</span>Pernyataan I benar; tetapi pernyataan II salah karena pada suhu 6.000°C semua materi pasti berwujud cair</button>
+    <button class="option-btn" onclick="selectOption(this,4,'D')"><span class="option-letter">D</span>Pernyataan II benar; sedangkan pernyataan I salah karena inti luar tersusun dari batuan basalt cair bukan besi-nikel</button>
+    <button class="option-btn" onclick="selectOption(this,4,'E')"><span class="option-letter">E</span>Keduanya benar namun tidak berhubungan; wujud inti bumi tidak dipengaruhi tekanan melainkan komposisi kimianya</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(4)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-4"></div>
+</div>
+
+<!-- Q5 -->
+<div class="question-card sec-1" style="animation-delay:0.25s" data-q="5" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 05</span>
+    <p class="q-text">Di zona subduksi, kerak samudra selalu "kalah" dan masuk ke bawah kerak benua saat keduanya bertumbukan. Fenomena ini dapat dijelaskan oleh perbedaan sifat fisik kedua jenis kerak. Alasan yang paling tepat mengapa kerak samudra menunjam ke bawah kerak benua adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,5,'A')"><span class="option-letter">A</span>Kerak samudra lebih tua sehingga lebih rapuh dan mudah hancur ketika berbenturan dengan kerak benua yang masih muda</button>
+    <button class="option-btn" onclick="selectOption(this,5,'B')"><span class="option-letter">B</span>Kerak samudra lebih tipis sehingga gaya dorong lempeng dari punggung samudra lebih kuat mendorongnya ke bawah</button>
+    <button class="option-btn" onclick="selectOption(this,5,'C')"><span class="option-letter">C</span>Kerak benua mengandung SiAl yang lebih berat dari SiMa sehingga kerak benua menekan kerak samudra ke bawah</button>
+    <button class="option-btn" onclick="selectOption(this,5,'D')"><span class="option-letter">D</span>Kerak samudra lebih padat dan berat (tersusun dari SiMa/basalt) dibanding kerak benua (SiAl/granit) yang lebih ringan</button>
+    <button class="option-btn" onclick="selectOption(this,5,'E')"><span class="option-letter">E</span>Kerak samudra memiliki komposisi mineral yang lebih mudah meleleh sehingga langsung menjadi magma saat bertumbukan</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(5)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-5"></div>
+</div>
+
+</div><!-- /questions-grid -->
+
+<!-- SECTION 2 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s2">⚡</div>
+    <div>
+      <div class="section-title" style="color:#ff6b35">Kisi 2: Gerakan Lempeng</div>
+      <div class="section-range">Soal 6 – 10</div>
+    </div>
+    <div class="section-line" style="color:#ff6b35"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q6 -->
+<div class="question-card sec-2" style="animation-delay:0.05s" data-q="6" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 06</span>
+    <p class="q-text">Terdapat tiga jenis pergerakan lempeng tektonik yang menghasilkan bentang alam berbeda. Pasangan yang SALAH antara jenis gerakan lempeng dan hasil bentang alamnya adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,6,'A')"><span class="option-letter">A</span>Divergen → Punggung Tengah Samudra (Mid Oceanic Ridge)</button>
+    <button class="option-btn" onclick="selectOption(this,6,'B')"><span class="option-letter">B</span>Konvergen benua-benua → Pegunungan lipatan seperti Himalaya</button>
+    <button class="option-btn" onclick="selectOption(this,6,'C')"><span class="option-letter">C</span>Konvergen samudra-benua → Palung laut dan subduksi lempeng samudra</button>
+    <button class="option-btn" onclick="selectOption(this,6,'D')"><span class="option-letter">D</span>Transform → Sesar mendatar seperti Sesar San Andreas di California</button>
+    <button class="option-btn" onclick="selectOption(this,6,'E')"><span class="option-letter">E</span>Divergen → Pegunungan lipatan dan tumpukan sedimen di zona tumbukan</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(6)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-6"></div>
+</div>
+
+<!-- Q7 -->
+<div class="question-card sec-2" style="animation-delay:0.1s" data-q="7" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 07</span>
+    <p class="q-text">Para ilmuwan menemukan bahwa dasar Samudra Atlantik semakin lebar setiap tahunnya. Hal ini disebabkan adanya celah di Punggung Tengah Atlantik yang terus-menerus mengeluarkan material baru. Proses yang menjelaskan fenomena ini adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,7,'A')"><span class="option-letter">A</span>Gerakan divergen lempeng, di mana dua lempeng saling menjauh sehingga terbentuk perluasan dasar samudra baru</button>
+    <button class="option-btn" onclick="selectOption(this,7,'B')"><span class="option-letter">B</span>Gerakan transform lempeng yang menyebabkan retakan horizontal dan membuka celah dasar samudra secara perlahan</button>
+    <button class="option-btn" onclick="selectOption(this,7,'C')"><span class="option-letter">C</span>Gerakan konvergen samudra-samudra yang mendorong salah satu lempeng naik dan menciptakan punggung baru</button>
+    <button class="option-btn" onclick="selectOption(this,7,'D')"><span class="option-letter">D</span>Epirogenesa negatif yang mengangkat dasar samudra sehingga terlihat seolah-olah samudra semakin melebar</button>
+    <button class="option-btn" onclick="selectOption(this,7,'E')"><span class="option-letter">E</span>Subduksi lempeng benua di kedua sisi Samudra Atlantik yang menarik dasar samudra ke arah masing-masing benua</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(7)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-7"></div>
+</div>
+
+<!-- Q8 -->
+<div class="question-card sec-2" style="animation-delay:0.15s" data-q="8" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 08</span>
+    <p class="q-text">Pegunungan Himalaya di Asia merupakan salah satu pegunungan tertinggi di dunia. Para ahli geologi menyimpulkan bahwa pegunungan ini terbentuk akibat tumbukan dua lempeng benua. Proses pembentukan Himalaya yang paling tepat adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,8,'A')"><span class="option-letter">A</span>Lempeng India menunjam ke bawah Lempeng Eurasia (subduksi), mendorong material ke atas membentuk palung laut</button>
+    <button class="option-btn" onclick="selectOption(this,8,'B')"><span class="option-letter">B</span>Lempeng Eurasia bergerak menjauh dari Lempeng India sehingga terjadi penumpukan sedimen di antara keduanya</button>
+    <button class="option-btn" onclick="selectOption(this,8,'C')"><span class="option-letter">C</span>Lempeng India bertumbukan dengan Lempeng Eurasia (konvergen benua-benua) sehingga keduanya terlipat membentuk pegunungan tinggi</button>
+    <button class="option-btn" onclick="selectOption(this,8,'D')"><span class="option-letter">D</span>Lempeng India bergerak horizontal sejajar Lempeng Eurasia (transform) dan gesekannya mengangkat material batuan</button>
+    <button class="option-btn" onclick="selectOption(this,8,'E')"><span class="option-letter">E</span>Keduanya bergerak ke arah yang sama, mendorong lapisan sedimen di depan mereka hingga terlipat membentuk bukit</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(8)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-8"></div>
+</div>
+
+<!-- Q9 -->
+<div class="question-card sec-2" style="animation-delay:0.2s" data-q="9" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 09</span>
+    <p class="q-text">Tenaga endogen dan tenaga eksogen sama-sama membentuk permukaan bumi, namun memiliki sifat yang berlawanan. Perbandingan yang PALING TEPAT antara kedua tenaga tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,9,'A')"><span class="option-letter">A</span>Endogen berasal dari luar bumi dan bersifat membangun, eksogen dari dalam bumi dan bersifat merombak</button>
+    <button class="option-btn" onclick="selectOption(this,9,'B')"><span class="option-letter">B</span>Endogen dan eksogen keduanya berasal dari dalam bumi, namun endogen bekerja di permukaan sedangkan eksogen di kedalaman</button>
+    <button class="option-btn" onclick="selectOption(this,9,'C')"><span class="option-letter">C</span>Endogen berasal dari inti bumi dan hanya menghasilkan gempa, eksogen dari mantel dan menghasilkan gunung api</button>
+    <button class="option-btn" onclick="selectOption(this,9,'D')"><span class="option-letter">D</span>Endogen berasal dari dalam bumi (bersifat membangun), eksogen dari luar bumi (bersifat merombak hasil endogen)</button>
+    <button class="option-btn" onclick="selectOption(this,9,'E')"><span class="option-letter">E</span>Keduanya berasal dari luar bumi, namun endogen bekerja secara vertikal dan eksogen secara horizontal</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(9)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-9"></div>
+</div>
+
+<!-- Q10 -->
+<div class="question-card sec-2" style="animation-delay:0.25s" data-q="10" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 10</span>
+    <p class="q-text">Indonesia sering disebut sebagai "negara paling rawan gempa bumi di dunia". Berdasarkan posisi tektoniknya, alasan utama yang menjelaskan kerawanan gempa di Indonesia adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,10,'A')"><span class="option-letter">A</span>Indonesia terletak di garis khatulistiwa sehingga mendapat tekanan gravitasi matahari yang lebih besar dan memicu gempa</button>
+    <button class="option-btn" onclick="selectOption(this,10,'B')"><span class="option-letter">B</span>Indonesia berada di pertemuan tiga lempeng besar (Eurasia, Indo-Australia, dan Pasifik) sehingga aktivitas tektonik sangat intensif</button>
+    <button class="option-btn" onclick="selectOption(this,10,'C')"><span class="option-letter">C</span>Indonesia merupakan kepulauan sehingga tidak memiliki landasan benua yang stabil dan terus bergerak mengikuti arus laut</button>
+    <button class="option-btn" onclick="selectOption(this,10,'D')"><span class="option-letter">D</span>Gunung api yang banyak di Indonesia menyimpan tekanan magma sangat besar yang sewaktu-waktu meledak sebagai gempa</button>
+    <button class="option-btn" onclick="selectOption(this,10,'E')"><span class="option-letter">E</span>Curah hujan tinggi di Indonesia menyebabkan erosi masif yang mengurangi beban di daratan dan memicu pergerakan kerak</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(10)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-10"></div>
+</div>
+
+</div>
+
+<!-- SECTION 3 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s3">🏔️</div>
+    <div>
+      <div class="section-title" style="color:#7fff6e">Kisi 3: Epirogenesa</div>
+      <div class="section-range">Soal 11 – 14</div>
+    </div>
+    <div class="section-line" style="color:#7fff6e"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q11 -->
+<div class="question-card sec-3" style="animation-delay:0.05s" data-q="11" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 11</span>
+    <p class="q-text">Epirogenesa adalah salah satu bentuk gerak bumi yang unik karena berlangsung dalam skala waktu yang sangat panjang. Ciri-ciri yang paling tepat menggambarkan epirogenesa adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,11,'A')"><span class="option-letter">A</span>Gerakan pengangkatan atau penurunan kulit bumi yang berlangsung sangat lambat dan meliputi wilayah yang sangat luas</button>
+    <button class="option-btn" onclick="selectOption(this,11,'B')"><span class="option-letter">B</span>Gerakan kulit bumi yang terjadi sangat cepat dan tiba-tiba, menyebabkan retakan besar pada batuan keras</button>
+    <button class="option-btn" onclick="selectOption(this,11,'C')"><span class="option-letter">C</span>Proses terlipat dan patahnya batuan akibat tekanan horizontal dari dua lempeng yang saling bertumbukan</button>
+    <button class="option-btn" onclick="selectOption(this,11,'D')"><span class="option-letter">D</span>Gerakan keluarnya magma dari dalam bumi menuju permukaan melalui kawah gunung api aktif</button>
+    <button class="option-btn" onclick="selectOption(this,11,'E')"><span class="option-letter">E</span>Pergeseran horizontal dua blok batuan di sepanjang bidang patahan yang dipicu oleh tegangan geser</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(11)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-11"></div>
+</div>
+
+<!-- Q12 -->
+<div class="question-card sec-3" style="animation-delay:0.1s" data-q="12" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 12</span>
+    <p class="q-text">Warga di sebuah kota pesisir Indonesia melaporkan bahwa dermaga yang dibangun 50 tahun lalu kini sudah terendam air laut. Garis pantai perlahan bergeser mundur ke arah daratan. Bangunan-bangunan tua di tepi pantai sebagian sudah tenggelam. Fenomena ini merupakan contoh dari…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,12,'A')"><span class="option-letter">A</span>Epirogenesa negatif, karena permukaan laut seolah-olah turun dan daratan semakin luas</button>
+    <button class="option-btn" onclick="selectOption(this,12,'B')"><span class="option-letter">B</span>Abrasi pantai yang hebat akibat gelombang laut yang mengikis tebing dan menenggelamkan dermaga</button>
+    <button class="option-btn" onclick="selectOption(this,12,'C')"><span class="option-letter">C</span>Orogenesa yang menyebabkan wilayah pesisir terangkat sehingga air laut terlihat naik dari perspektif daratan</button>
+    <button class="option-btn" onclick="selectOption(this,12,'D')"><span class="option-letter">D</span>Epirogenesa positif, di mana daratan bergerak turun sehingga seolah-olah permukaan air laut naik dan merendam pesisir</button>
+    <button class="option-btn" onclick="selectOption(this,12,'E')"><span class="option-letter">E</span>Sedimentasi laut yang menumpuk di sekitar dermaga dan mempersempit aliran air masuk ke daerah pesisir</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(12)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-12"></div>
+</div>
+
+<!-- Q13 -->
+<div class="question-card sec-3" style="animation-delay:0.15s" data-q="13" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 13</span>
+    <p class="q-text">Pulau Timor dan Pulau Buton di Indonesia Timur dikenal sebagai contoh fenomena geologi yang menarik. Para ahli menemukan bahwa pulau-pulau tersebut terus mengalami pengangkatan sehingga dasar laut purba kini menjadi dataran tinggi. Proses yang menyebabkan fenomena ini adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,13,'A')"><span class="option-letter">A</span>Epirogenesa positif yang menyebabkan daratannya turun sehingga seolah-olah air laut di sekitarnya meningkat</button>
+    <button class="option-btn" onclick="selectOption(this,13,'B')"><span class="option-letter">B</span>Aktivitas vulkanik intensif yang mendorong lava ke permukaan dan menambah ketinggian pulau secara bertahap</button>
+    <button class="option-btn" onclick="selectOption(this,13,'C')"><span class="option-letter">C</span>Epirogenesa negatif yang menyebabkan daratan terangkat naik sehingga seolah-olah permukaan laut turun</button>
+    <button class="option-btn" onclick="selectOption(this,13,'D')"><span class="option-letter">D</span>Orogenesa yang melipat batuan sedimen di Pulau Timor membentuk pegunungan baru yang semakin tinggi</button>
+    <button class="option-btn" onclick="selectOption(this,13,'E')"><span class="option-letter">E</span>Divergensi lempeng yang mendorong Pulau Timor ke atas akibat material baru yang keluar dari punggung samudra</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(13)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-13"></div>
+</div>
+
+<!-- Q14 -->
+<div class="question-card sec-3" style="animation-delay:0.2s" data-q="14" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 14</span>
+    <p class="q-text">Perhatikan dua kasus berikut: Kasus I — Beberapa pulau kecil di bagian timur Indonesia perlahan kehilangan daratan, garis pantai terus bergeser ke darat. Kasus II — Di bagian barat Sulawesi, ditemukan fosil hewan laut di puncak bukit yang kini berada 200 meter di atas permukaan laut. Jenis epirogenesa pada Kasus I dan Kasus II secara berurutan adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,14,'A')"><span class="option-letter">A</span>Kasus I = Epirogenesa Negatif; Kasus II = Epirogenesa Positif</button>
+    <button class="option-btn" onclick="selectOption(this,14,'B')"><span class="option-letter">B</span>Kasus I = Orogenesa; Kasus II = Epirogenesa Negatif</button>
+    <button class="option-btn" onclick="selectOption(this,14,'C')"><span class="option-letter">C</span>Kasus I = Epirogenesa Negatif; Kasus II = Epirogenesa Negatif</button>
+    <button class="option-btn" onclick="selectOption(this,14,'D')"><span class="option-letter">D</span>Kasus I = Epirogenesa Positif; Kasus II = Orogenesa lipatan</button>
+    <button class="option-btn" onclick="selectOption(this,14,'E')"><span class="option-letter">E</span>Kasus I = Epirogenesa Positif; Kasus II = Epirogenesa Negatif</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(14)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-14"></div>
+</div>
+
+</div>
+
+<!-- SECTION 4 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s4">⛰️</div>
+    <div>
+      <div class="section-title" style="color:#ffd700">Kisi 4: Patahan — Horst &amp; Graben</div>
+      <div class="section-range">Soal 15 – 18</div>
+    </div>
+    <div class="section-line" style="color:#ffd700"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q15 -->
+<div class="question-card sec-4" style="animation-delay:0.05s" data-q="15" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 15</span>
+    <p class="q-text">Suatu proses geologi menghasilkan retakan pada batuan yang bersifat keras dan kaku ketika mendapat tekanan melebihi batas elastisitasnya. Berbeda dengan lipatan yang terjadi pada batuan lunak, proses ini terjadi secara tiba-tiba. Proses yang dimaksud beserta bagian dari tenaga pembentuknya adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,15,'A')"><span class="option-letter">A</span>Vulkanisme, bagian dari tenaga endogen yang menghasilkan keluarnya magma dari perut bumi melalui rekahan</button>
+    <button class="option-btn" onclick="selectOption(this,15,'B')"><span class="option-letter">B</span>Patahan (faulting), bagian dari orogenesa/tenaga endogen yang terjadi pada batuan keras yang tidak mampu melipat</button>
+    <button class="option-btn" onclick="selectOption(this,15,'C')"><span class="option-letter">C</span>Erosi masif, bagian dari tenaga eksogen yang mengikis batuan keras di permukaan hingga membentuk retakan dalam</button>
+    <button class="option-btn" onclick="selectOption(this,15,'D')"><span class="option-letter">D</span>Epirogenesa, bagian dari tenaga endogen yang mengangkat atau menurunkan batuan secara perlahan di wilayah luas</button>
+    <button class="option-btn" onclick="selectOption(this,15,'E')"><span class="option-letter">E</span>Lipatan (folding), bagian dari tenaga eksogen yang menekan batuan keras dari dua arah berlawanan secara tiba-tiba</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(15)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-15"></div>
+</div>
+
+<!-- Q16 -->
+<div class="question-card sec-4" style="animation-delay:0.1s" data-q="16" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 16</span>
+    <p class="q-text">Di antara dua sesar yang sejajar, terdapat blok batuan yang posisinya lebih tinggi dari blok-blok di sekitarnya. Blok ini membentuk dataran tinggi memanjang yang khas. Bentukan geologi yang dimaksud beserta contoh di dunia adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,16,'A')"><span class="option-letter">A</span>Graben, contohnya adalah lembah Palu di Sulawesi Tengah yang terbentuk di antara dua dinding tebing tinggi</button>
+    <button class="option-btn" onclick="selectOption(this,16,'B')"><span class="option-letter">B</span>Antiklinal, yaitu bagian puncak dari lipatan batuan sedimen yang terangkat membentuk punggung perbukitan</button>
+    <button class="option-btn" onclick="selectOption(this,16,'C')"><span class="option-letter">C</span>Sinklinal, yaitu bagian lembah dari lipatan batuan yang posisinya lebih rendah di antara dua antiklinal</button>
+    <button class="option-btn" onclick="selectOption(this,16,'D')"><span class="option-letter">D</span>Horst, contohnya adalah Pegunungan Schwarzwald di Jerman yang merupakan blok terangkat di antara graben Sungai Rhein</button>
+    <button class="option-btn" onclick="selectOption(this,16,'E')"><span class="option-letter">E</span>Maar, yaitu kawah lebar hasil letusan eksplosif tunggal yang terlihat seperti dataran tinggi dari kejauhan</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(16)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-16"></div>
+</div>
+
+<!-- Q17 -->
+<div class="question-card sec-4" style="animation-delay:0.15s" data-q="17" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 17</span>
+    <p class="q-text">Lembah Palu di Sulawesi Tengah merupakan salah satu contoh nyata bentang alam patahan di Indonesia yang juga menjadi lokasi bencana gempa dan tsunami dahsyat pada tahun 2018. Secara geomorfologis, Lembah Palu terbentuk karena…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,17,'A')"><span class="option-letter">A</span>Proses pembentukan graben, di mana blok batuan di antara dua sesar mengalami penurunan membentuk lembah yang dalam</button>
+    <button class="option-btn" onclick="selectOption(this,17,'B')"><span class="option-letter">B</span>Erosi sungai intensif yang mengikis batuan dasar selama jutaan tahun hingga membentuk lembah berbentuk V yang sangat dalam</button>
+    <button class="option-btn" onclick="selectOption(this,17,'C')"><span class="option-letter">C</span>Proses vulkanik di mana letusan gunung api purba membentuk kaldera raksasa yang kemudian berkembang menjadi lembah</button>
+    <button class="option-btn" onclick="selectOption(this,17,'D')"><span class="option-letter">D</span>Pembentukan horst di kedua sisi lembah yang terangkat tinggi sehingga daerah tengah terlihat seolah-olah turun</button>
+    <button class="option-btn" onclick="selectOption(this,17,'E')"><span class="option-letter">E</span>Epirogenesa positif yang menyebabkan seluruh wilayah Sulawesi Tengah turun kecuali bagian tengahnya</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(17)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-17"></div>
+</div>
+
+<!-- Q18 -->
+<div class="question-card sec-4" style="animation-delay:0.2s" data-q="18" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 18</span>
+    <p class="q-text">Seorang guru geografi membandingkan dua proses pembentukan pegunungan kepada siswanya: proses pertama menghasilkan pegunungan dengan lapisan batuan yang melengkung seperti gelombang, sedangkan proses kedua menghasilkan blok-blok batuan yang terpisah dengan tebing yang curam. Perbandingan yang PALING TEPAT antara kedua proses tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,18,'A')"><span class="option-letter">A</span>Keduanya adalah proses yang sama; lipatan dan patahan adalah istilah berbeda untuk fenomena geologi yang identik</button>
+    <button class="option-btn" onclick="selectOption(this,18,'B')"><span class="option-letter">B</span>Patahan terjadi pada batuan lunak dan plastis, sedangkan lipatan terjadi pada batuan keras dan kaku</button>
+    <button class="option-btn" onclick="selectOption(this,18,'C')"><span class="option-letter">C</span>Lipatan terjadi pada batuan lunak/plastis menghasilkan antiklinal-sinklinal; patahan pada batuan keras menghasilkan horst-graben</button>
+    <button class="option-btn" onclick="selectOption(this,18,'D')"><span class="option-letter">D</span>Lipatan dihasilkan oleh tenaga eksogen seperti erosi, sedangkan patahan dihasilkan oleh tenaga endogen</button>
+    <button class="option-btn" onclick="selectOption(this,18,'E')"><span class="option-letter">E</span>Patahan selalu terjadi lebih dalam di bumi daripada lipatan yang selalu terjadi di dekat permukaan bumi</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(18)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-18"></div>
+</div>
+
+</div>
+
+<!-- SECTION 5 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s5">🌋</div>
+    <div>
+      <div class="section-title" style="color:#ff4d6d">Kisi 5: Vulkanisme &amp; Gunung Api</div>
+      <div class="section-range">Soal 19 – 24</div>
+    </div>
+    <div class="section-line" style="color:#ff4d6d"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q19 -->
+<div class="question-card sec-5" style="animation-delay:0.05s" data-q="19" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 19</span>
+    <p class="q-text">Magma yang bergerak ke atas tidak selalu berhasil mencapai permukaan bumi. Ketika magma membeku di dalam kerak bumi membentuk massa besar yang masif seperti "dapur beku" raksasa, bentukan tersebut disebut…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,19,'A')"><span class="option-letter">A</span>Dike (gang), yaitu lembaran magma yang memotong lapisan batuan secara vertikal membentuk dinding batuan</button>
+    <button class="option-btn" onclick="selectOption(this,19,'B')"><span class="option-letter">B</span>Sill, yaitu lembaran magma yang menyusup sejajar di antara lapisan batuan tanpa memotong lapisan</button>
+    <button class="option-btn" onclick="selectOption(this,19,'C')"><span class="option-letter">C</span>Lakolit, yaitu kubah magma cembung yang menerobos di antara dua lapisan batuan sehingga lapisan atasnya terangkat</button>
+    <button class="option-btn" onclick="selectOption(this,19,'D')"><span class="option-letter">D</span>Batolit, yaitu massa magma yang membeku masif dan besar di dalam kerak bumi, sering disebut dapur beku</button>
+    <button class="option-btn" onclick="selectOption(this,19,'E')"><span class="option-letter">E</span>Efflata, yaitu material padat yang dilemparkan gunung api ke luar ketika terjadi letusan eksplosif</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(19)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-19"></div>
+</div>
+
+<!-- Q20 -->
+<div class="question-card sec-5" style="animation-delay:0.1s" data-q="20" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 20</span>
+    <p class="q-text">Setelah erupsi Gunung Semeru, tim peneliti mengidentifikasi berbagai material vulkanik yang dihasilkan. Mereka membagi material tersebut ke dalam tiga kategori: padat, cair, dan gas. Pasangan material dan kategorinya yang SALAH adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,20,'A')"><span class="option-letter">A</span>Bom vulkanik → Material padat (efflata) berupa batuan besar yang terlontar saat erupsi eksplosif</button>
+    <button class="option-btn" onclick="selectOption(this,20,'B')"><span class="option-letter">B</span>Lahar dingin → Material cair berupa campuran lava dan air hujan yang mengalir menuruni lereng gunung</button>
+    <button class="option-btn" onclick="selectOption(this,20,'C')"><span class="option-letter">C</span>Mofet → Material cair berupa asam sulfat pekat yang mengalir perlahan dari rekahan kawah gunung api</button>
+    <button class="option-btn" onclick="selectOption(this,20,'D')"><span class="option-letter">D</span>Solfatar → Gas belerang (H₂S) yang dikeluarkan dari kawah gunung api dengan bau busuk khas</button>
+    <button class="option-btn" onclick="selectOption(this,20,'E')"><span class="option-letter">E</span>Abu vulkanik → Material padat halus yang terlontar ke udara dan dapat menyebar ribuan kilometer</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(20)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-20"></div>
+</div>
+
+<!-- Q21 -->
+<div class="question-card sec-5" style="animation-delay:0.15s" data-q="21" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 21</span>
+    <p class="q-text">Sebuah desa di lereng gunung api dilaporkan mengalami banyak korban jiwa meski tidak ada letusan besar. Penyelidikan menemukan bahwa korban meninggal di lembah rendah dekat kawah dengan kondisi tidak ada luka fisik. Gas yang paling mungkin menjadi penyebab kematian tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,21,'A')"><span class="option-letter">A</span>Solfatar (H₂S), gas belerang berbau busuk yang mengiritasi saluran pernapasan namun tidak mematikan dalam dosis rendah</button>
+    <button class="option-btn" onclick="selectOption(this,21,'B')"><span class="option-letter">B</span>Fumarol (H₂O), uap air panas yang menyebabkan luka bakar pada tubuh korban di sekitar kawah</button>
+    <button class="option-btn" onclick="selectOption(this,21,'C')"><span class="option-letter">C</span>Gas metana (CH₄) yang terakumulasi dari dekomposisi bahan organik di lereng gunung yang lembap</button>
+    <button class="option-btn" onclick="selectOption(this,21,'D')"><span class="option-letter">D</span>Abu vulkanik halus yang terhirup dan menyumbat saluran napas tanpa meninggalkan bekas luka luar</button>
+    <button class="option-btn" onclick="selectOption(this,21,'E')"><span class="option-letter">E</span>Mofet (CO₂), gas asam arang tidak berwarna dan tidak berbau yang menggantikan oksigen di udara lembah rendah</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(21)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-21"></div>
+</div>
+
+<!-- Q22 -->
+<div class="question-card sec-5" style="animation-delay:0.2s" data-q="22" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 22</span>
+    <p class="q-text">Gunung Mauna Loa di Hawaii memiliki bentuk yang sangat berbeda dari gunung api di Indonesia. Dasarnya sangat luas, lerengnya sangat landai, dan erupsinya mengalirkan lava encer tanpa letusan dahsyat. Tipe gunung api ini adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,22,'A')"><span class="option-letter">A</span>Gunung api maar, terbentuk dari letusan eksplosif tunggal yang menghasilkan kawah lebar tanpa kerucut</button>
+    <button class="option-btn" onclick="selectOption(this,22,'B')"><span class="option-letter">B</span>Gunung api perisai (shield), terbentuk dari aliran lava encer yang menumpuk perlahan membentuk lereng sangat landai</button>
+    <button class="option-btn" onclick="selectOption(this,22,'C')"><span class="option-letter">C</span>Gunung api strato/kerucut, terbentuk dari pergantian erupsi eksplosif dan lelehan lava membentuk kerucut berlapis</button>
+    <button class="option-btn" onclick="selectOption(this,22,'D')"><span class="option-letter">D</span>Gunung api kaldera, yang terbentuk saat puncak gunung api runtuh ke dalam dapur magma yang kosong</button>
+    <button class="option-btn" onclick="selectOption(this,22,'E')"><span class="option-letter">E</span>Gunung api komposit, kombinasi dari maar dan strato yang menghasilkan kawah luas dengan lereng berlapis</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(22)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-22"></div>
+</div>
+
+<!-- Q23 -->
+<div class="question-card sec-5" style="animation-delay:0.25s" data-q="23" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 23</span>
+    <p class="q-text">PVMBG (Pusat Vulkanologi dan Mitigasi Bencana Geologi) menaikkan status Gunung Merapi dari Level 2 (Waspada) ke Level 3 (Siaga). Urutan lengkap tingkatan status gunung api di Indonesia dari terendah ke tertinggi adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,23,'A')"><span class="option-letter">A</span>Awas → Siaga → Waspada → Normal</button>
+    <button class="option-btn" onclick="selectOption(this,23,'B')"><span class="option-letter">B</span>Normal → Siaga → Waspada → Awas</button>
+    <button class="option-btn" onclick="selectOption(this,23,'C')"><span class="option-letter">C</span>Waspada → Normal → Siaga → Awas</button>
+    <button class="option-btn" onclick="selectOption(this,23,'D')"><span class="option-letter">D</span>Normal → Waspada → Siaga → Awas</button>
+    <button class="option-btn" onclick="selectOption(this,23,'E')"><span class="option-letter">E</span>Normal → Waspada → Awas → Siaga</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(23)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-23"></div>
+</div>
+
+<!-- Q24 -->
+<div class="question-card sec-5" style="animation-delay:0.3s" data-q="24" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 24</span>
+    <p class="q-text">Gunung Merapi adalah salah satu gunung api paling aktif dan berbahaya di Indonesia. Berdasarkan karakteristiknya — bentuk kerucut berlapis, erupsi eksplosif berulang, menghasilkan awan panas (wedhus gembel), dan sering terjadi erupsi — analisis yang PALING TEPAT tentang Gunung Merapi adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,24,'A')"><span class="option-letter">A</span>Gunung Merapi bertipe strato/kerucut komposit, dengan erupsi efusif-eksplosif berulang menghasilkan awan panas dan lahar</button>
+    <button class="option-btn" onclick="selectOption(this,24,'B')"><span class="option-letter">B</span>Gunung Merapi bertipe perisai karena lavanya encer dan mengalir jauh, membentuk lereng landai khas Hawaii</button>
+    <button class="option-btn" onclick="selectOption(this,24,'C')"><span class="option-letter">C</span>Gunung Merapi bertipe maar karena memiliki kawah besar dan letusan tunggal yang sangat eksplosif</button>
+    <button class="option-btn" onclick="selectOption(this,24,'D')"><span class="option-letter">D</span>Gunung Merapi bertipe strato namun tidak aktif lagi karena kerucut berlapis menandakan aktivitas telah berhenti</button>
+    <button class="option-btn" onclick="selectOption(this,24,'E')"><span class="option-letter">E</span>Gunung Merapi merupakan gunung api kaldera karena puncaknya sering runtuh saat letusan besar terjadi</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(24)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-24"></div>
+</div>
+
+</div>
+
+<!-- SECTION 6 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s6">💧</div>
+    <div>
+      <div class="section-title" style="color:#00cfb4">Kisi 6: Eksogen — Erosi &amp; Sedimentasi</div>
+      <div class="section-range">Soal 25 – 29</div>
+    </div>
+    <div class="section-line" style="color:#00cfb4"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q25 -->
+<div class="question-card sec-6" style="animation-delay:0.05s" data-q="25" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 25</span>
+    <p class="q-text">Seorang peneliti mencatat empat jenis erosi di lokasi yang berbeda: (1) tebing pantai terkikis gelombang di pantai selatan Jawa, (2) batu berbentuk jamur di gurun pasir, (3) lembah berbentuk V di hulu sungai Ciliwung, (4) lembah berbentuk U di pegunungan bersalju Alpen. Pasangan jenis erosi dan medianya yang BENAR untuk lokasi (2) adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,25,'A')"><span class="option-letter">A</span>Ablasi oleh air sungai yang mengalir deras di musim hujan membawa pasir dan mengikis batu di sekitarnya</button>
+    <button class="option-btn" onclick="selectOption(this,25,'B')"><span class="option-letter">B</span>Ekserasi oleh aliran gletser yang membawa material keras dan mengikis batu di jalur alirannya secara masif</button>
+    <button class="option-btn" onclick="selectOption(this,25,'C')"><span class="option-letter">C</span>Deflasi oleh hembusan angin yang membawa pasir halus mengikis bagian bawah batu lebih kuat daripada bagian atas</button>
+    <button class="option-btn" onclick="selectOption(this,25,'D')"><span class="option-letter">D</span>Abrasi oleh gelombang laut yang membawa material sedimen kasar dan membentuk lekukan di bagian dasar batu</button>
+    <button class="option-btn" onclick="selectOption(this,25,'E')"><span class="option-letter">E</span>Korasi oleh larutan asam hujan yang secara kimia melarutkan bagian batu kapur di daerah kering</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(25)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-25"></div>
+</div>
+
+<!-- Q26 -->
+<div class="question-card sec-6" style="animation-delay:0.1s" data-q="26" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 26</span>
+    <p class="q-text">Pantai Utara Jawa mengalami abrasi yang semakin parah setiap tahun. Beberapa desa nelayan kehilangan ratusan meter daratan dalam satu dekade. Faktor utama yang LANGSUNG menyebabkan abrasi tersebut serta dampak jangka panjangnya adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,26,'A')"><span class="option-letter">A</span>Pengikisan oleh gelombang dan arus laut secara terus-menerus; dampak jangka panjang: hilangnya daratan, pemukiman tenggelam</button>
+    <button class="option-btn" onclick="selectOption(this,26,'B')"><span class="option-letter">B</span>Erosi angin (deflasi) yang membawa pasir pantai ke laut; dampaknya adalah terbentuknya gumuk pasir di lepas pantai</button>
+    <button class="option-btn" onclick="selectOption(this,26,'C')"><span class="option-letter">C</span>Sedimentasi sungai yang berlebihan di muara; dampaknya adalah pendangkalan pantai hingga terjadi abrasi balik</button>
+    <button class="option-btn" onclick="selectOption(this,26,'D')"><span class="option-letter">D</span>Subsiden (penurunan tanah) akibat pengambilan air tanah berlebihan; dampaknya berupa genangan banjir rob</button>
+    <button class="option-btn" onclick="selectOption(this,26,'E')"><span class="option-letter">E</span>Ekserasi es laut yang mencair di musim kemarau dan mengikis pantai berpasir dari arah utara Jawa</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(26)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-26"></div>
+</div>
+
+<!-- Q27 -->
+<div class="question-card sec-6" style="animation-delay:0.15s" data-q="27" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 27</span>
+    <p class="q-text">Ablasi dan deflasi sama-sama merupakan jenis erosi, namun terjadi di lingkungan yang berbeda dan menghasilkan bentuk lahan yang berbeda pula. Perbandingan yang PALING TEPAT antara ablasi dan deflasi adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,27,'A')"><span class="option-letter">A</span>Ablasi dilakukan oleh angin dan menghasilkan lembah V; deflasi dilakukan air laut dan menghasilkan tebing pantai</button>
+    <button class="option-btn" onclick="selectOption(this,27,'B')"><span class="option-letter">B</span>Keduanya dilakukan oleh air, namun ablasi di air tawar dan deflasi di air laut yang mengandung garam</button>
+    <button class="option-btn" onclick="selectOption(this,27,'C')"><span class="option-letter">C</span>Ablasi dilakukan oleh gletser menghasilkan lembah U; deflasi dilakukan oleh sungai menghasilkan lembah V</button>
+    <button class="option-btn" onclick="selectOption(this,27,'D')"><span class="option-letter">D</span>Ablasi dan deflasi keduanya dilakukan oleh angin, namun ablasi di dataran rendah dan deflasi di pegunungan</button>
+    <button class="option-btn" onclick="selectOption(this,27,'E')"><span class="option-letter">E</span>Ablasi dilakukan oleh air sungai (menghasilkan lembah V); deflasi dilakukan oleh angin di daerah kering (menghasilkan batu jamur)</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(27)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-27"></div>
+</div>
+
+<!-- Q28 -->
+<div class="question-card sec-6" style="animation-delay:0.2s" data-q="28" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 28</span>
+    <p class="q-text">Delta Sungai Mahakam di Kalimantan Timur merupakan salah satu delta terbesar di Indonesia. Delta tersebut terus berkembang ke arah laut dari waktu ke waktu. Proses yang membentuk delta dan faktor yang menentukan besarnya delta adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,28,'A')"><span class="option-letter">A</span>Abrasi pantai oleh arus laut yang menumpuk material di muara; besarnya ditentukan oleh kekuatan gelombang laut</button>
+    <button class="option-btn" onclick="selectOption(this,28,'B')"><span class="option-letter">B</span>Sedimentasi fluvial di mulut muara sungai; besarnya ditentukan oleh volume sedimen yang dibawa aliran sungai</button>
+    <button class="option-btn" onclick="selectOption(this,28,'C')"><span class="option-letter">C</span>Pengendapan aeolis berupa pasir yang dibawa angin dan menumpuk di daerah bervegetasi di sekitar muara sungai</button>
+    <button class="option-btn" onclick="selectOption(this,28,'D')"><span class="option-letter">D</span>Epirogenesa negatif yang mengangkat dasar muara sungai sehingga terlihat seperti daratan baru yang muncul</button>
+    <button class="option-btn" onclick="selectOption(this,28,'E')"><span class="option-letter">E</span>Aktivitas vulkanik bawah laut yang mendorong material sedimen ke permukaan di sekitar muara sungai</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(28)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-28"></div>
+</div>
+
+<!-- Q29 -->
+<div class="question-card sec-6" style="animation-delay:0.25s" data-q="29" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 29</span>
+    <p class="q-text">Di sepanjang pantai berpasir, kadang dijumpai gundukan pasir yang menghubungkan sebuah pulau kecil dengan daratan utama, serta lidah pasir yang menjorok ke laut. Secara berurutan, kedua bentang alam hasil sedimentasi marine tersebut disebut…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,29,'A')"><span class="option-letter">A</span>Laguna dan tombolo; laguna menghubungkan pulau ke daratan, tombolo adalah perairan yang terkurung</button>
+    <button class="option-btn" onclick="selectOption(this,29,'B')"><span class="option-letter">B</span>Meander dan delta; meander terbentuk di pantai sedangkan delta adalah lidah pasir yang menjorok ke laut</button>
+    <button class="option-btn" onclick="selectOption(this,29,'C')"><span class="option-letter">C</span>Spit dan laguna; spit adalah gundukan penghubung pulau, laguna adalah lidah pasir menjorok ke laut</button>
+    <button class="option-btn" onclick="selectOption(this,29,'D')"><span class="option-letter">D</span>Tombolo dan spit; tombolo menghubungkan pulau kecil ke daratan, spit adalah lidah pasir yang menjorok ke laut</button>
+    <button class="option-btn" onclick="selectOption(this,29,'E')"><span class="option-letter">E</span>Gumuk pasir dan tombolo; gumuk menghubungkan pulau ke daratan, tombolo adalah endapan di belakang terumbu</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(29)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-29"></div>
+</div>
+
+</div>
+
+<!-- SECTION 7 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s7">🌱</div>
+    <div>
+      <div class="section-title" style="color:#b06dff">Kisi 7: Pedosfer — Komponen &amp; Jenis Tanah</div>
+      <div class="section-range">Soal 30 – 35</div>
+    </div>
+    <div class="section-line" style="color:#b06dff"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q30 -->
+<div class="question-card sec-7" style="animation-delay:0.05s" data-q="30" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 30</span>
+    <p class="q-text">Tanah tersusun dari empat komponen utama dalam perbandingan tertentu. Dalam kondisi tanah ideal untuk pertumbuhan tanaman, persentase volume masing-masing komponen yang PALING MENDEKATI kondisi ideal adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,30,'A')"><span class="option-letter">A</span>Bahan mineral 70%, bahan organik 20%, air 5%, udara 5%</button>
+    <button class="option-btn" onclick="selectOption(this,30,'B')"><span class="option-letter">B</span>Bahan mineral 30%, bahan organik 30%, air 20%, udara 20%</button>
+    <button class="option-btn" onclick="selectOption(this,30,'C')"><span class="option-letter">C</span>Bahan mineral 60%, bahan organik 15%, air 15%, udara 10%</button>
+    <button class="option-btn" onclick="selectOption(this,30,'D')"><span class="option-letter">D</span>Bahan mineral 50%, bahan organik 10%, air 30%, udara 10%</button>
+    <button class="option-btn" onclick="selectOption(this,30,'E')"><span class="option-letter">E</span>Bahan mineral 45%, bahan organik 5%, air 25%, udara 25%</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(30)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-30"></div>
+</div>
+
+<!-- Q31 -->
+<div class="question-card sec-7" style="animation-delay:0.1s" data-q="31" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 31</span>
+    <p class="q-text">Seorang petani ingin menggali tanah untuk menanam pohon buah. Ia menemukan bahwa lapisan paling atas berwarna sangat gelap dan kaya akan sisa-sisa daun busuk. Di bawahnya terdapat lapisan berwarna gelap yang paling gembur dan subur. Berdasarkan profil horizon tanah, lapisan yang paling gembur dan subur yang dimaksud petani tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,31,'A')"><span class="option-letter">A</span>Horizon O, yaitu lapisan paling atas yang berisi humus dan serasah organik yang belum terurai sempurna</button>
+    <button class="option-btn" onclick="selectOption(this,31,'B')"><span class="option-letter">B</span>Horizon A (topsoil), yaitu lapisan olah tanah yang paling subur karena kaya humus terurai dan aktif secara biologis</button>
+    <button class="option-btn" onclick="selectOption(this,31,'C')"><span class="option-letter">C</span>Horizon B (subsoil), yaitu lapisan penimbunan mineral dari lapisan atasnya yang membuat lapisan ini sangat subur</button>
+    <button class="option-btn" onclick="selectOption(this,31,'D')"><span class="option-letter">D</span>Horizon C (regolith), yaitu bahan induk yang mulai lapuk dan menjadi sumber nutrisi utama bagi tanaman</button>
+    <button class="option-btn" onclick="selectOption(this,31,'E')"><span class="option-letter">E</span>Horizon R (bedrock), yaitu batuan dasar yang menjadi sumber mineral primer yang dibutuhkan akar tanaman</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(31)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-31"></div>
+</div>
+
+<!-- Q32 -->
+<div class="question-card sec-7" style="animation-delay:0.15s" data-q="32" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 32</span>
+    <p class="q-text">Di antara semua lapisan dalam profil tanah, terdapat satu horizon yang berfungsi sebagai zona "pencucian" (eluviasi) di mana mineral-mineral halus dan humus terbawa ke lapisan di bawahnya oleh air perkolasi. Horizon yang dimaksud adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,32,'A')"><span class="option-letter">A</span>Horizon R, karena batuan keras di sini tidak menyerap air dan mendorong mineral ke lapisan di atasnya</button>
+    <button class="option-btn" onclick="selectOption(this,32,'B')"><span class="option-letter">B</span>Horizon C, karena bahan induk yang melapuk melepaskan mineral yang kemudian dicuci ke lapisan lebih dalam</button>
+    <button class="option-btn" onclick="selectOption(this,32,'C')"><span class="option-letter">C</span>Horizon B, karena lapisan ini menerima dan mengakumulasi mineral dari pencucian lapisan di atasnya</button>
+    <button class="option-btn" onclick="selectOption(this,32,'D')"><span class="option-letter">D</span>Horizon O, karena serasah organik di sini menghasilkan asam humus yang melarutkan dan mencuci mineral</button>
+    <button class="option-btn" onclick="selectOption(this,32,'E')"><span class="option-letter">E</span>Horizon A, karena lapisan topsoil ini merupakan zona eluviasi tempat mineral tercuci ke lapisan B di bawahnya</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(32)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-32"></div>
+</div>
+
+<!-- Q33 -->
+<div class="question-card sec-7" style="animation-delay:0.2s" data-q="33" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 33</span>
+    <p class="q-text">Petani di lereng Gunung Merapi dan Gunung Merbabu dikenal menghasilkan sayuran dan buah-buahan berkualitas tinggi. Para ahli pertanian menghubungkan kesuburan luar biasa ini dengan jenis tanah yang ada di sana. Jenis tanah dan alasan kesuburannya yang paling tepat adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,33,'A')"><span class="option-letter">A</span>Tanah aluvial, karena endapan lumpur sungai dari lereng gunung membawa banyak mineral ke dataran rendah sekitar</button>
+    <button class="option-btn" onclick="selectOption(this,33,'B')"><span class="option-letter">B</span>Tanah gambut, yang kaya bahan organik tumbuhan dan menyimpan banyak air untuk kebutuhan pertanian</button>
+    <button class="option-btn" onclick="selectOption(this,33,'C')"><span class="option-letter">C</span>Tanah vulkanis (andosol), berasal dari abu gunung api yang kaya mineral dan bertekstur gembur sehingga sangat subur</button>
+    <button class="option-btn" onclick="selectOption(this,33,'D')"><span class="option-letter">D</span>Tanah laterit, yang terbentuk akibat hujan tinggi di lereng gunung sehingga mineral terkonsentrasi di permukaan</button>
+    <button class="option-btn" onclick="selectOption(this,33,'E')"><span class="option-letter">E</span>Tanah kapur (terrarosa), hasil pelapukan batu gamping yang kaya kalsium dan cocok untuk tanaman hortikultura</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(33)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-33"></div>
+</div>
+
+<!-- Q34 -->
+<div class="question-card sec-7" style="animation-delay:0.25s" data-q="34" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 34</span>
+    <p class="q-text">Kebakaran lahan gambut di Kalimantan dan Sumatera setiap tahun menghasilkan kabut asap yang mencemari udara hingga negara tetangga. Selain mudah terbakar, tanah gambut juga memiliki masalah lain yang membuatnya tidak cocok untuk pertanian konvensional. Karakteristik tanah gambut yang menjadi masalah tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,34,'A')"><span class="option-letter">A</span>pH sangat asam, kandungan air sangat tinggi, dan kurang subur karena sisa tumbuhan belum terurai sempurna menjadi humus</button>
+    <button class="option-btn" onclick="selectOption(this,34,'B')"><span class="option-letter">B</span>Terlalu basa (pH tinggi), sangat kering, dan miskin air sehingga tanaman sulit mendapatkan mineral yang dibutuhkan</button>
+    <button class="option-btn" onclick="selectOption(this,34,'C')"><span class="option-letter">C</span>Warna merah bata karena kaya besi dan aluminium yang bersifat racun bagi sebagian besar jenis tanaman budidaya</button>
+    <button class="option-btn" onclick="selectOption(this,34,'D')"><span class="option-letter">D</span>Berasal dari batuan gamping yang mudah larut sehingga lapisan tanah di bawahnya berlubang seperti gua-gua kecil</button>
+    <button class="option-btn" onclick="selectOption(this,34,'E')"><span class="option-letter">E</span>Teksturnya terlalu halus seperti debu sehingga air tidak bisa meresap dan tanaman tidak bisa tumbuh dengan baik</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(34)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-34"></div>
+</div>
+
+<!-- Q35 -->
+<div class="question-card sec-7" style="animation-delay:0.3s" data-q="35" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 35</span>
+    <p class="q-text">Seorang konsultan pertanian diminta memilih lokasi untuk pengembangan sawah padi skala besar. Dari empat pilihan lokasi yang tersedia — lereng gunung berapi aktif, lahan gambut di Kalimantan, dataran rendah delta sungai, dan bukit kapur di Gunung Kidul — lokasi yang PALING TEPAT untuk sawah padi beserta alasannya adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,35,'A')"><span class="option-letter">A</span>Lereng gunung berapi, karena tanah andosol sangat subur meski risiko bencana erupsi cukup tinggi</button>
+    <button class="option-btn" onclick="selectOption(this,35,'B')"><span class="option-letter">B</span>Lahan gambut Kalimantan, karena luasnya sangat besar dan tersedia air yang cukup sepanjang tahun</button>
+    <button class="option-btn" onclick="selectOption(this,35,'C')"><span class="option-letter">C</span>Bukit kapur Gunung Kidul, karena tanah terrarosa memiliki pH tinggi yang disukai tanaman padi</button>
+    <button class="option-btn" onclick="selectOption(this,35,'D')"><span class="option-letter">D</span>Dataran rendah delta sungai, karena tanah aluvial halus dan subur, topografi datar, dan sumber air irigasi mudah</button>
+    <button class="option-btn" onclick="selectOption(this,35,'E')"><span class="option-letter">E</span>Lahan gambut, karena cadangan karbon organiknya yang tinggi dapat langsung dimanfaatkan sebagai pupuk alami</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(35)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-35"></div>
+</div>
+
+</div>
+
+<!-- SECTION 8 -->
+<div class="section-divider">
+  <div class="section-header">
+    <div class="section-icon s8">🏛️</div>
+    <div>
+      <div class="section-title" style="color:#ff9500">Kisi 8: Lembaga-Lembaga Geografi</div>
+      <div class="section-range">Soal 36 – 40</div>
+    </div>
+    <div class="section-line" style="color:#ff9500"></div>
+  </div>
+</div>
+
+<div class="questions-grid">
+
+<!-- Q36 -->
+<div class="question-card sec-8" style="animation-delay:0.05s" data-q="36" data-answer="B">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 36</span>
+    <p class="q-text">Pasca-gempa besar, dua lembaga pemerintah bergerak dengan tugas yang sangat berbeda. Lembaga pertama bertugas mendeteksi gempa, menganalisis data seismik, dan mengeluarkan peringatan dini tsunami. Lembaga kedua bertugas mengkoordinasi seluruh operasi penanggulangan bencana dari tahap prabencana hingga rehabilitasi. Pasangan lembaga yang tepat adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,36,'A')"><span class="option-letter">A</span>BNPB mendeteksi gempa dan tsunami; BMKG mengkoordinasikan penanggulangan bencana secara menyeluruh</button>
+    <button class="option-btn" onclick="selectOption(this,36,'B')"><span class="option-letter">B</span>BMKG mendeteksi gempa dan mengeluarkan peringatan dini tsunami; BNPB mengkoordinasikan penanggulangan bencana</button>
+    <button class="option-btn" onclick="selectOption(this,36,'C')"><span class="option-letter">C</span>BASARNAS mendeteksi gempa dan tsunami; BNPB melaksanakan operasi pencarian dan penyelamatan korban</button>
+    <button class="option-btn" onclick="selectOption(this,36,'D')"><span class="option-letter">D</span>Badan Geologi mendeteksi semua jenis gempa termasuk tsunami; BASARNAS mengkoordinasikan rehabilitasi pascabencana</button>
+    <button class="option-btn" onclick="selectOption(this,36,'E')"><span class="option-letter">E</span>BMKG mengkoordinasikan penanggulangan bencana; BIG menyediakan peta evakuasi dan deteksi zona gempa</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(36)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-36"></div>
+</div>
+
+<!-- Q37 -->
+<div class="question-card sec-8" style="animation-delay:0.1s" data-q="37" data-answer="E">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 37</span>
+    <p class="q-text">Sebuah kapal feri tenggelam di perairan Selat Sunda dan terdapat puluhan penumpang yang hilang. Lembaga pemerintah yang memiliki tugas utama dan kewenangan resmi untuk memimpin operasi pencarian dan pertolongan para korban tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,37,'A')"><span class="option-letter">A</span>BNPB, karena kecelakaan kapal merupakan bencana nasional yang membutuhkan koordinasi penanggulangan terpadu</button>
+    <button class="option-btn" onclick="selectOption(this,37,'B')"><span class="option-letter">B</span>BMKG, karena memiliki data cuaca dan kondisi laut yang dibutuhkan untuk menentukan lokasi pencarian korban</button>
+    <button class="option-btn" onclick="selectOption(this,37,'C')"><span class="option-letter">C</span>BIG, karena memiliki peta laut dan data batimetri yang diperlukan untuk operasi pencarian di bawah laut</button>
+    <button class="option-btn" onclick="selectOption(this,37,'D')"><span class="option-letter">D</span>Badan Geologi, karena kecelakaan di laut berkaitan dengan kondisi geologi dasar laut dan arus bawah laut</button>
+    <button class="option-btn" onclick="selectOption(this,37,'E')"><span class="option-letter">E</span>BASARNAS, karena tugas utamanya adalah melaksanakan operasi SAR (Search and Rescue) di darat, laut, dan udara</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(37)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-37"></div>
+</div>
+
+<!-- Q38 -->
+<div class="question-card sec-8" style="animation-delay:0.15s" data-q="38" data-answer="C">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 38</span>
+    <p class="q-text">Pemerintah Indonesia membutuhkan peta dasar resmi seluruh wilayah NKRI yang menjadi acuan standar nasional untuk semua keperluan pemetaan. Lembaga yang memiliki kewenangan untuk memproduksi dan menyebarluaskan peta dasar/rupa bumi Indonesia tersebut adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,38,'A')"><span class="option-letter">A</span>BMKG, karena memiliki jaringan stasiun pengamatan di seluruh Indonesia yang menghasilkan data spasial terlengkap</button>
+    <button class="option-btn" onclick="selectOption(this,38,'B')"><span class="option-letter">B</span>BRIN, karena mengintegrasikan semua lembaga riset termasuk LAPAN yang mengoperasikan satelit pengamatan bumi</button>
+    <button class="option-btn" onclick="selectOption(this,38,'C')"><span class="option-letter">C</span>BIG (Badan Informasi Geospasial), yang dahulu bernama BAKOSURTANAL, bertugas menyelenggarakan informasi geospasial dasar</button>
+    <button class="option-btn" onclick="selectOption(this,38,'D')"><span class="option-letter">D</span>Badan Geologi, karena peta geologi Indonesia mencakup seluruh informasi fisik wilayah yang dibutuhkan sebagai peta dasar</button>
+    <button class="option-btn" onclick="selectOption(this,38,'E')"><span class="option-letter">E</span>BASARNAS, karena membutuhkan peta terlengkap untuk keperluan navigasi dan operasi pencarian di seluruh wilayah</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(38)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-38"></div>
+</div>
+
+<!-- Q39 -->
+<div class="question-card sec-8" style="animation-delay:0.2s" data-q="39" data-answer="A">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 39</span>
+    <p class="q-text">Gunung Ili Lewotolok di NTT menunjukkan peningkatan aktivitas vulkanik yang signifikan. Para ahli perlu memantau, menganalisis data seismik gunung tersebut, dan memutuskan apakah status gunung perlu dinaikkan. Lembaga yang berwenang melakukan pemantauan dan menetapkan status gunung api ini adalah…</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,39,'A')"><span class="option-letter">A</span>Badan Geologi (melalui PVMBG), yang bertugas memantau aktivitas vulkanik dan menetapkan status gunung api di Indonesia</button>
+    <button class="option-btn" onclick="selectOption(this,39,'B')"><span class="option-letter">B</span>BMKG, karena peningkatan aktivitas gunung api menghasilkan perubahan cuaca lokal yang masuk dalam domain BMKG</button>
+    <button class="option-btn" onclick="selectOption(this,39,'C')"><span class="option-letter">C</span>BNPB, karena potensi erupsi gunung api merupakan bencana nasional yang langsung dikoordinasikan oleh BNPB</button>
+    <button class="option-btn" onclick="selectOption(this,39,'D')"><span class="option-letter">D</span>BASARNAS, karena penetapan status gunung api berkaitan langsung dengan kesiapan operasi evakuasi dan penyelamatan</button>
+    <button class="option-btn" onclick="selectOption(this,39,'E')"><span class="option-letter">E</span>BRIN, karena sebagai lembaga riset nasional memiliki kewenangan penelitian dan pengkajian semua fenomena alam Indonesia</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(39)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-39"></div>
+</div>
+
+<!-- Q40 -->
+<div class="question-card sec-8" style="animation-delay:0.25s" data-q="40" data-answer="D">
+  <div class="answered-check">✅</div>
+  <div class="q-header">
+    <span class="q-number">NO. 40</span>
+    <p class="q-text">Pada malam 28 September 2018, gempa berkekuatan 7,4 SR mengguncang Palu, Sulawesi Tengah, disusul tsunami dan likuefaksi. Simulasikan urutan koordinasi lembaga yang PALING TEPAT dari detik pertama kejadian hingga fase rehabilitasi jangka panjang:</p>
+  </div>
+  <div class="options-list">
+    <button class="option-btn" onclick="selectOption(this,40,'A')"><span class="option-letter">A</span>BASARNAS → mendeteksi gempa → BMKG → evakuasi → BNPB → mencari korban → BIG → memetakan kerusakan</button>
+    <button class="option-btn" onclick="selectOption(this,40,'B')"><span class="option-letter">B</span>BNPB → mendeteksi dan mengumumkan gempa → BMKG → mencari korban → BASARNAS → rehabilitasi jangka panjang</button>
+    <button class="option-btn" onclick="selectOption(this,40,'C')"><span class="option-letter">C</span>BIG → mendeteksi gempa dan tsunami → BASARNAS → menetapkan zona bencana → BNPB → koordinasi rehabilitasi</button>
+    <button class="option-btn" onclick="selectOption(this,40,'D')"><span class="option-letter">D</span>BMKG → mendeteksi gempa dan peringatan tsunami → BASARNAS → operasi SAR mencari korban → BNPB → koordinasi rehabilitasi</button>
+    <button class="option-btn" onclick="selectOption(this,40,'E')"><span class="option-letter">E</span>Badan Geologi → mendeteksi gempa → BMKG → menetapkan status bencana → BASARNAS → koordinasi jangka panjang</button>
+  </div>
+  <button class="check-btn" onclick="checkAnswer(40)">⚡ Periksa Jawaban</button>
+  <div class="feedback-msg" id="fb-40"></div>
+</div>
+
+</div>
+
+<!-- Submit All -->
+<div class="submit-area">
+  <button class="submit-all-btn" onclick="submitAll()">
+    🎯 Lihat Hasil Akhir & Nilai
+  </button>
+</div>
+
+<!-- Results -->
+<div class="results-panel" id="resultsPanel">
+  <div class="results-card">
+    <div class="results-score" id="finalScore">0</div>
+    <div class="results-grade" id="finalGrade">—</div>
+    <div class="results-breakdown">
+      <div class="result-stat">
+        <div class="num" style="color:var(--correct)" id="correctCount">0</div>
+        <div class="label">✅ Benar</div>
+      </div>
+      <div class="result-stat">
+        <div class="num" style="color:var(--wrong)" id="wrongCount">0</div>
+        <div class="label">❌ Salah</div>
+      </div>
+      <div class="result-stat">
+        <div class="num" style="color:var(--muted)" id="unansweredCount">0</div>
+        <div class="label">⏭️ Belum Dijawab</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Answer Key -->
+<div class="answer-key-section">
+  <div class="answer-key-card">
+    <div class="answer-key-header">
+      <span style="font-size:24px">🗝️</span>
+      <div>
+        <h2>Kunci Jawaban</h2>
+        <p style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px">40 Soal Pilihan Ganda — Geografi Kelas X</p>
+      </div>
+    </div>
+    <div class="answer-table-wrap">
+      <table class="answer-table" id="answerTable">
+        <thead>
+          <tr>
+            <th>No.</th><th>Jwb</th>
+            <th style="padding-left:20px">No.</th><th>Jwb</th>
+            <th style="padding-left:20px">No.</th><th>Jwb</th>
+            <th style="padding-left:20px">No.</th><th>Jwb</th>
+          </tr>
+        </thead>
+        <tbody id="answerTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ========================
+// DATA
+// ========================
+const answers = {
+  1:'C',2:'A',3:'E',4:'B',5:'D',
+  6:'E',7:'A',8:'C',9:'D',10:'B',
+  11:'A',12:'D',13:'C',14:'E',15:'B',
+  16:'D',17:'A',18:'C',19:'D',20:'C',
+  21:'E',22:'B',23:'D',24:'A',25:'C',
+  26:'A',27:'E',28:'B',29:'D',30:'E',
+  31:'B',32:'E',33:'C',34:'A',35:'D',
+  36:'B',37:'E',38:'C',39:'A',40:'D'
+};
+
+const sectionColors = {
+  1:'#00d4ff',2:'#00d4ff',3:'#00d4ff',4:'#00d4ff',5:'#00d4ff',
+  6:'#ff6b35',7:'#ff6b35',8:'#ff6b35',9:'#ff6b35',10:'#ff6b35',
+  11:'#7fff6e',12:'#7fff6e',13:'#7fff6e',14:'#7fff6e',
+  15:'#ffd700',16:'#ffd700',17:'#ffd700',18:'#ffd700',
+  19:'#ff4d6d',20:'#ff4d6d',21:'#ff4d6d',22:'#ff4d6d',23:'#ff4d6d',24:'#ff4d6d',
+  25:'#00cfb4',26:'#00cfb4',27:'#00cfb4',28:'#00cfb4',29:'#00cfb4',
+  30:'#b06dff',31:'#b06dff',32:'#b06dff',33:'#b06dff',34:'#b06dff',35:'#b06dff',
+  36:'#ff9500',37:'#ff9500',38:'#ff9500',39:'#ff9500',40:'#ff9500'
+};
+
+const userAnswers = {};
+const checked = {};
+
+// ========================
+// STARFIELD CANVAS
+// ========================
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5,
+        a: Math.random(),
+        speed: Math.random() * 0.3 + 0.05,
+        pulse: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const t = Date.now() * 0.001;
+    stars.forEach(s => {
+      s.pulse += s.speed * 0.02;
+      const alpha = s.a * (0.4 + 0.4 * Math.sin(s.pulse));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180,210,255,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  
+  resize();
+  initStars();
+  draw();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+})();
+
+// ========================
+// FLOATING PARTICLES
+// ========================
+(function() {
+  const colors = ['#00d4ff','#b06dff','#ff6b35','#7fff6e','#ffd700'];
+  function spawn() {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${Math.random()*15+10}s;
+      animation-delay:${Math.random()*5}s;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 25000);
+  }
+  setInterval(spawn, 800);
+  for(let i=0;i<8;i++) setTimeout(spawn, i*300);
+})();
+
+// ========================
+// CARD ANIMATION (INTERSECTION OBSERVER)
+// ========================
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.question-card').forEach((card, i) => {
+  card.style.animationDelay = `${i * 0.04}s`;
+  observer.observe(card);
+});
+
+// ========================
+// SELECT OPTION
+// ========================
+function selectOption(btn, qNum, letter) {
+  if (checked[qNum]) return;
+  
+  const card = btn.closest('.question-card');
+  card.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  btn.style.borderColor = sectionColors[qNum] || '#00d4ff';
+  btn.style.background = `rgba(${hexToRgb(sectionColors[qNum] || '#00d4ff')},0.08)`;
+  btn.querySelector('.option-letter').style.background = sectionColors[qNum] || '#00d4ff';
+  btn.querySelector('.option-letter').style.color = '#0a0f1a';
+  
+  // Reset others
+  card.querySelectorAll('.option-btn').forEach(b => {
+    if(b !== btn) {
+      b.style.borderColor = '';
+      b.style.background = '';
+      b.querySelector('.option-letter').style.background = '';
+      b.querySelector('.option-letter').style.color = '';
+    }
+  });
+  
+  userAnswers[qNum] = letter;
+  
+  // Ripple
+  const rect = btn.getBoundingClientRect();
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.cssText = `width:40px;height:40px;left:10px;top:${btn.offsetHeight/2-20}px;`;
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(), 600);
+  
+  // Show check button
+  const cb = card.querySelector('.check-btn');
+  cb.classList.add('visible');
+  
+  updateProgress();
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+// ========================
+// CHECK ANSWER
+// ========================
+function checkAnswer(qNum) {
+  if (checked[qNum]) return;
+  checked[qNum] = true;
+  
+  const card = document.querySelector(`[data-q="${qNum}"]`);
+  const correct = answers[qNum];
+  const user = userAnswers[qNum];
+  const fb = document.getElementById(`fb-${qNum}`);
+  const letters = ['A','B','C','D','E'];
+  
+  card.querySelectorAll('.option-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    btn.style.borderColor = '';
+    btn.style.background = '';
+    btn.querySelector('.option-letter').style.background = '';
+    btn.querySelector('.option-letter').style.color = '';
+    
+    const ltr = letters[i];
+    if(ltr === correct) {
+      btn.classList.add('correct');
+    } else if(ltr === user && user !== correct) {
+      btn.classList.add('wrong');
+    }
+  });
+  
+  card.querySelector('.check-btn').style.display = 'none';
+  
+  if(user === correct) {
+    fb.className = 'feedback-msg correct-msg show';
+    fb.innerHTML = '✅ Benar! Jawaban kamu tepat.';
+    card.classList.add('answered');
+    spawnConfetti(card);
+  } else if(!user) {
+    fb.className = 'feedback-msg wrong-msg show';
+    fb.innerHTML = `⏭️ Belum dijawab. Jawaban benar: <strong>${correct}</strong>`;
+  } else {
+    fb.className = 'feedback-msg wrong-msg show';
+    fb.innerHTML = `❌ Kurang tepat. Jawaban benar: <strong>${correct}</strong>`;
+  }
+  
+  updateProgress();
+  updateAnswerTable();
+}
+
+// ========================
+// SUBMIT ALL
+// ========================
+function submitAll() {
+  // Check all unanswered
+  for(let i=1;i<=40;i++) {
+    if(!checked[i]) checkAnswer(i);
+  }
+  
+  let correct = 0, wrong = 0, unanswered = 0;
+  for(let i=1;i<=40;i++) {
+    if(!userAnswers[i]) unanswered++;
+    else if(userAnswers[i] === answers[i]) correct++;
+    else wrong++;
+  }
+  
+  const score = Math.round((correct/40)*100);
+  let grade;
+  if(score>=90) grade='A — Sangat Baik 🏆';
+  else if(score>=80) grade='B — Baik 🥈';
+  else if(score>=70) grade='C — Cukup 🥉';
+  else if(score>=60) grade='D — Perlu Perbaikan 📚';
+  else grade='E — Perlu Belajar Lebih Giat 💪';
+  
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('finalGrade').textContent = grade;
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('unansweredCount').textContent = unanswered;
+  
+  const panel = document.getElementById('resultsPanel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  
+  if(score >= 70) {
+    for(let i=0;i<50;i++) {
+      setTimeout(() => spawnConfettiGlobal(), i * 60);
+    }
+  }
+}
+
+// ========================
+// PROGRESS
+// ========================
+function updateProgress() {
+  const answered = Object.keys(userAnswers).length;
+  const pct = (answered / 40) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressScore').textContent = `${answered}/40`;
+}
+
+// ========================
+// ANSWER TABLE
+// ========================
+function buildAnswerTable() {
+  const tbody = document.getElementById('answerTableBody');
+  const colors = {
+    1:'#00d4ff',2:'#00d4ff',3:'#00d4ff',4:'#00d4ff',5:'#00d4ff',
+    6:'#ff6b35',7:'#ff6b35',8:'#ff6b35',9:'#ff6b35',10:'#ff6b35',
+    11:'#7fff6e',12:'#7fff6e',13:'#7fff6e',14:'#7fff6e',
+    15:'#ffd700',16:'#ffd700',17:'#ffd700',18:'#ffd700',
+    19:'#ff4d6d',20:'#ff4d6d',21:'#ff4d6d',22:'#ff4d6d',23:'#ff4d6d',24:'#ff4d6d',
+    25:'#00cfb4',26:'#00cfb4',27:'#00cfb4',28:'#00cfb4',29:'#00cfb4',
+    30:'#b06dff',31:'#b06dff',32:'#b06dff',33:'#b06dff',34:'#b06dff',35:'#b06dff',
+    36:'#ff9500',37:'#ff9500',38:'#ff9500',39:'#ff9500',40:'#ff9500'
+  };
+  tbody.innerHTML = '';
+  for(let row=0;row<10;row++) {
+    const tr = document.createElement('tr');
+    for(let col=0;col<4;col++) {
+      const n = row + 1 + col*10;
+      const a = answers[n];
+      const c = colors[n];
+      const tdN = document.createElement('td');
+      tdN.textContent = n;
+      tdN.style.cssText = `font-family:'Space Mono',monospace;color:var(--muted);${col>0?'padding-left:20px':''}`;
+      const tdA = document.createElement('td');
+      tdA.innerHTML = `<span class="answer-badge" id="ab-${n}" style="background:rgba(${hexToRgb(c)},0.15);color:${c}">${a}</span>`;
+      tr.appendChild(tdN);
+      tr.appendChild(tdA);
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function updateAnswerTable() {
+  // After checking, mark correct/wrong in table
+  for(let i=1;i<=40;i++) {
+    const badge = document.getElementById(`ab-${i}`);
+    if(!badge) continue;
+    if(checked[i]) {
+      if(userAnswers[i] === answers[i]) {
+        badge.style.background = 'rgba(127,255,110,0.2)';
+        badge.style.color = '#7fff6e';
+        badge.style.boxShadow = '0 0 10px rgba(127,255,110,0.3)';
+      } else if(userAnswers[i]) {
+        badge.style.background = 'rgba(255,77,109,0.2)';
+        badge.style.color = '#ff4d6d';
+      }
+    }
+  }
+}
+
+buildAnswerTable();
+
+// ========================
+// CONFETTI
+// ========================
+function spawnConfetti(parent) {
+  const colors = ['#00d4ff','#ff6b35','#7fff6e','#ffd700','#b06dff','#ff4d6d'];
+  const rect = parent.getBoundingClientRect();
+  for(let i=0;i<12;i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `
+      left:${rect.left + Math.random()*rect.width}px;
+      top:${rect.top + window.scrollY}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      animation-duration:${Math.random()*1.5+1}s;
+      animation-delay:${Math.random()*0.3}s;
+      transform:rotate(${Math.random()*360}deg);
+    `;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 2500);
+  }
+}
+
+function spawnConfettiGlobal() {
+  const colors = ['#00d4ff','#ff6b35','#7fff6e','#ffd700','#b06dff','#ff4d6d','#fff'];
+  const c = document.createElement('div');
+  c.className = 'confetti-piece';
+  c.style.cssText = `
+    left:${Math.random()*100}vw;
+    top:${window.scrollY}px;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    border-radius:${Math.random()>0.5?'50%':'2px'};
+    width:${Math.random()*8+4}px;
+    height:${Math.random()*8+4}px;
+    animation-duration:${Math.random()*2+1.5}s;
+  `;
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(), 4000);
+}
+
+// ========================
+// BACK TO TOP
+// ========================
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('backTop');
+  if(window.scrollY > 500) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+
+// ========================
+// STAGGER CARD ANIMATIONS
+// ========================
+document.querySelectorAll('.question-card').forEach((card, i) => {
+  card.style.animationDelay = `${0.05 + (i % 5) * 0.05}s`;
+});
+</script>
+</body>
+</html>
